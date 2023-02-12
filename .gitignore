@@ -1,4 +1,8 @@
-./node_modues
+# node modules folder
+node_modules
 
+# producion build
+build
 
+# environment variables
 .env

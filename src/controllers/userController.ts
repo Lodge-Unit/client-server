@@ -38,13 +38,30 @@ class UserController {
         },
         process.env.JWT_SECRET as string
       );
-      return {
-        response: {
-          message: "Account created",
-          token: token,
-          status: "success",
-        },
-      };
+      const emailResult = await mailer({
+        subject: "Welcome Summit Lodge",
+        type: "email",
+        token: token,
+        to: args.email,
+        message: "Welcome to Summit Lodge",
+      });
+
+      if (emailResult) {
+        return {
+          response: {
+            message: "Account created",
+            token: token,
+            status: "success",
+          },
+        };
+      } else {
+        return {
+          response: {
+            message: "Operation failed !!",
+            status: "failed",
+          },
+        };
+      }
     } catch (error: any) {
       console.error(error);
       return {

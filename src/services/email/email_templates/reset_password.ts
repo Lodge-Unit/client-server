@@ -3,7 +3,7 @@ const resetPass = (url: string) => `<!DOCTYPE html>
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Reset Password Attempt</title>
+    <title>Reset Password</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type="text/css">
       /**
@@ -109,7 +109,7 @@ const resetPass = (url: string) => `<!DOCTYPE html>
         opacity: 0;
       "
     >
-      Welcome to the Canza Community
+      Welcome to the Summit Lodge
     </div>
     <!-- end preheader -->
     <!-- start body -->
@@ -181,7 +181,7 @@ const resetPass = (url: string) => `<!DOCTYPE html>
                     line-height: 48px;
                   "
                 >
-                  Reset Password Attempt
+                  Reset Password 
                 </h1>
               </td>
             </tr>
@@ -241,7 +241,7 @@ const resetPass = (url: string) => `<!DOCTYPE html>
                         <tr>
                           <td
                             align="center"
-                            bgcolor="#0b97a0"
+                            bgcolor="orange"
                             style="border-radius: 6px"
                           >
                             <a
@@ -283,7 +283,7 @@ const resetPass = (url: string) => `<!DOCTYPE html>
               >
                 <p style="margin: 0">
                   From,<br />
-                  Canza Team
+                  Summit Lodge Team
                 </p>
               </td>
             </tr>
@@ -325,7 +325,7 @@ const resetPass = (url: string) => `<!DOCTYPE html>
                   color: #666;
                 "
               >
-                <!-- <p style="margin: 0;">You received this email because we received a request for your Canza account sign up. If you didn't request [type_of_action] you can safely delete this email.</p> -->
+                <!-- <p style="margin: 0;">You received this email because we received a request for your Summit Lodge account sign up. If you didn't request [type_of_action] you can safely delete this email.</p> -->
               </td>
             </tr>
             <!-- end permission -->
@@ -344,10 +344,10 @@ const resetPass = (url: string) => `<!DOCTYPE html>
               >
                 <p style="margin: 0">
                   To stop receiving these emails, you can
-                  <a href="https://canza.io" target="_blank">unsubscribe</a> at
+                  <a href="https://summit-lodge.vercel.app/" target="_blank">unsubscribe</a> at
                   any time.
                 </p>
-                <p style="margin: 0">P.O 100001, Lagos, Nigeria</p>
+                <p style="margin: 0">P.O 100001, Buea, Cameroon</p>
               </td>
             </tr>
             <!-- end unsubscribe -->

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # node modules folder
 node_modules
 
@@ -5,4 +6,7 @@ node_modules
 build
 
 # environment variables
+=======
+node_modules
+>>>>>>> ed0515bfc24e147f1504d757a4098ba765f80921
 .env

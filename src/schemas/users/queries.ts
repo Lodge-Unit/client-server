@@ -1,24 +1,26 @@
-import { 
-    GraphQLObjectType, 
-    GraphQLString, 
-    GraphQLSchema, 
-    GraphQLID,
-    GraphQLList, 
-    GraphQLInt,
-    GraphQLNonNull } from "graphql"
-import UserType from "./type"
-import User from "../../models/user" 
+import { GraphQLID, GraphQLList, GraphQLString } from "graphql";
+import UserType from "./type";
+import UserController from "../../controllers/userController";
 
-const userQueries =  {
-    user: { 
-        type: UserType,
-        args: {
-            id: { type: GraphQLID },
-        },
-        resolve(parent: any, args: any){
-            return User.findById(args.id)
-        }
-     }
-}
+const userCtl = new UserController();
 
-export default userQueries
+const userQueries = {
+  user: {
+    type: UserType,
+    args: {
+      id: { type: GraphQLID },
+      token: { type: GraphQLString },
+    },
+    async resolve(parent: any, args: any) {
+      return await userCtl.getUser(args);
+    },
+  },
+  users: {
+    type: new GraphQLList(UserType),
+    async resolve(parent: any, args: any) {
+      return await userCtl.getUsers();
+    },
+  },
+};
+
+export default userQueries;

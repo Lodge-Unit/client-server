@@ -105,7 +105,7 @@ class UserController {
   }
   async update(args: any) {
     try {
-      return await User.findByIdAndUpdate(
+      const result = await User.updateOne(
         { _id: args.id },
         {
           $set: {
@@ -116,6 +116,14 @@ class UserController {
           },
         }
       );
+      if (result.acknowledged) {
+        return {
+          response: {
+            message: "Account updated successfully !!",
+            status: "success",
+          },
+        };
+      }
     } catch (error) {
       console.error(error);
       return {

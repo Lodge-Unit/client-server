@@ -104,24 +104,58 @@ class UserController {
   }
   async update(args: any) {
     try {
-      const result = await User.updateOne(
-        { _id: args.id },
-        {
-          $set: {
-            fname: args.fname,
-            lname: args.lname,
-            email: args.email,
-            phone: args.phone,
-          },
+      if (args.token) {
+        const tokenResult: any = jwt.verify(
+          args.token,
+          process.env.JWT_SECRET as string
+        );
+        if (!tokenResult) {
+          return {
+            response: {
+              message: "Invalid or Expired token",
+              status: "failed",
+            },
+          };
         }
-      );
-      if (result.acknowledged) {
-        return {
-          response: {
-            message: "Account updated successfully !!",
-            status: "success",
-          },
-        };
+        const result = await User.updateOne(
+          { _id: tokenResult.userId },
+          {
+            $set: {
+              fname: args.fname,
+              lname: args.lname,
+              email: args.email,
+              phone: args.phone,
+            },
+          }
+        );
+        if (result.acknowledged) {
+          return {
+            response: {
+              message: "Account updated successfully !!",
+              status: "success",
+            },
+          };
+        }
+      } else {
+        const result = await User.updateOne(
+          { _id: args.id },
+          {
+            $set: {
+              fname: args.fname,
+              lname: args.lname,
+              email: args.email,
+              phone: args.phone,
+            },
+          }
+        );
+        if (result.acknowledged) {
+          return {
+            response: {
+              message: "Account updated successfully !!",
+              status: "success",
+            },
+          };
+        }
       }
     } catch (error) {
       console.error(error);
@@ -261,16 +295,42 @@ class UserController {
   }
 
   async getUser(args: any) {
-    try {
-      return await User.findById(args.id);
-    } catch (error) {
-      console.error(error);
-      return {
-        response: {
-          message: "Operation failed, please try again !!",
-          status: "failed",
-        },
-      };
+    if (args.id) {
+      try {
+        return await User.findById(args.id);
+      } catch (error) {
+        console.error(error);
+        return {
+          response: {
+            message: "Operation failed, please try again !!",
+            status: "failed",
+          },
+        };
+      }
+    } else {
+      try {
+        const tokenResult: any = jwt.verify(
+          args.token,
+          process.env.JWT_SECRET as string
+        );
+        if (!tokenResult) {
+          return {
+            response: {
+              message: "Invalid or Expired token",
+              status: "failed",
+            },
+          };
+        }
+        return await User.findById(tokenResult.userId);
+      } catch (error) {
+        console.error(error);
+        return {
+          response: {
+            message: "Operation failed, please try again !!",
+            status: "failed",
+          },
+        };
+      }
     }
   }
   async getUsers() {

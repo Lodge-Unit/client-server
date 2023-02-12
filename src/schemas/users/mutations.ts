@@ -32,7 +32,8 @@ const userMutations = {
   updateUser: {
     type: UserType,
     args: {
-      id: { type: new GraphQLNonNull(GraphQLID) },
+      id: { type: GraphQLID },
+      token: { type: GraphQLString },
       fname: { type: new GraphQLNonNull(GraphQLString) },
       lname: { type: new GraphQLNonNull(GraphQLString) },
       email: { type: new GraphQLNonNull(GraphQLString) },

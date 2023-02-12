@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLList } from "graphql";
+import { GraphQLID, GraphQLList, GraphQLString } from "graphql";
 import UserType from "./type";
 import UserController from "../../controllers/userController";
 
@@ -9,6 +9,7 @@ const userQueries = {
     type: UserType,
     args: {
       id: { type: GraphQLID },
+      token: { type: GraphQLString },
     },
     async resolve(parent: any, args: any) {
       return await userCtl.getUser(args);

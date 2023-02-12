@@ -192,8 +192,8 @@ class UserController {
       );
       // Send Email
       const result = await mailer({
-        subject: "Forgot password",
-        type: "recover_password",
+        subject: "Reset password",
+        type: "reset_password",
         token: token,
         to: args.email,
       });

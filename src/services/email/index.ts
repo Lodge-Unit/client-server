@@ -39,6 +39,7 @@ async function mailer(options: any) {
     await transporter.sendMail(mailOptions);
     return true;
   } catch (error) {
+    console.error(error);
     return false;
   }
 }

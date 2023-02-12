@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import _ from "lodash";
 import bcrypt from "bcryptjs";
+import mailer from "../services/email";
 dotenv.config();
 
 class UserController {
@@ -190,18 +191,34 @@ class UserController {
         }
       );
       // Send Email
-      return {
-        response: {
-          token: token,
-          message: "Check your email to reset password !!",
-          status: "success",
-        },
-      };
+      const result = await mailer({
+        subject: "Forgot password",
+        type: "recover_password",
+        token: token,
+        to: args.email,
+      });
+
+      if (result) {
+        return {
+          response: {
+            token: token,
+            message: "Check your email to reset password !!",
+            status: "success",
+          },
+        };
+      } else {
+        return {
+          response: {
+            message: "Operation failed !!",
+            status: "failed",
+          },
+        };
+      }
     } catch (error) {
       console.error(error);
       return {
         response: {
-          message: "User with this email does not exist",
+          message: "Operation failed !!",
           status: "failed",
         },
       };

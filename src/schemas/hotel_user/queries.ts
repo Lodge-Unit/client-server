@@ -1,8 +1,8 @@
 import { GraphQLID, GraphQLList } from "graphql";
 import UserType from "./type";
-import UserController from "../../controllers/userController";
+import HotelUserController from "../../controllers/hotelUserController";
 
-const userCtl = new UserController();
+const hotelUserctl = new HotelUserController();
 
 const userQueries = {
   user: {
@@ -11,13 +11,13 @@ const userQueries = {
       id: { type: GraphQLID },
     },
     async resolve(parent: any, args: any) {
-      return await userCtl.getUser(args);
+      return await hotelUserctl.getUser(args);
     },
   },
   users: {
     type: new GraphQLList(UserType),
     async resolve(parent: any, args: any) {
-      return await userCtl.getUsers();
+      return await hotelUserctl.getUsers();
     },
   },
 };

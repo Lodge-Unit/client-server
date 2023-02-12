@@ -39,23 +39,24 @@ const userMutations = {
   updateUser: {
     type: UserType,
     args: {
+      id: { type: new GraphQLNonNull(GraphQLID) },
       fname: { type: new GraphQLNonNull(GraphQLString) },
       lname: { type: new GraphQLNonNull(GraphQLString) },
       email: { type: new GraphQLNonNull(GraphQLString) },
       phone: { type: new GraphQLNonNull(GraphQLString) },
     },
-    resolve(parent: any, args: any) {
-      return userCtl.update(args);
+    async resolve(parent: any, args: any) {
+      return await userCtl.update(args);
     },
   },
   updatePassword: {
     type: UserType,
     args: {
-      old_password: { type: new GraphQLNonNull(GraphQLString) },
-      new_password: { type: new GraphQLNonNull(GraphQLString) },
+      token: { type: new GraphQLNonNull(GraphQLString) },
+      password: { type: new GraphQLNonNull(GraphQLString) },
     },
-    resolve(parent: any, args: any) {
-      return userCtl.updatePassword(args);
+    async resolve(parent: any, args: any) {
+      return await userCtl.updatePassword(args);
     },
   },
   forgotPassword: {
@@ -63,17 +64,18 @@ const userMutations = {
     args: {
       email: { type: new GraphQLNonNull(GraphQLString) },
     },
-    resolve(parent: any, args: any) {
-      return userCtl.forgotPassword(args);
+    async resolve(parent: any, args: any) {
+      return await userCtl.forgotPassword(args);
     },
   },
   resetPassword: {
     type: UserType,
     args: {
+      token: { type: new GraphQLNonNull(GraphQLString) },
       password: { type: new GraphQLNonNull(GraphQLString) },
     },
-    resolve(parent: any, args: any) {
-      return userCtl.resetPassword(args);
+    async resolve(parent: any, args: any) {
+      return await userCtl.resetPassword(args);
     },
   },
 };

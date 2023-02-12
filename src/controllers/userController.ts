@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import _ from "lodash";
 import bcrypt from "bcryptjs";
-
 dotenv.config();
 
 class UserController {
@@ -46,6 +45,7 @@ class UserController {
         },
       };
     } catch (error: any) {
+      console.error(error);
       return {
         response: {
           message: error.message,
@@ -94,6 +94,7 @@ class UserController {
         };
       }
     } catch (error) {
+      console.error(error);
       return {
         response: {
           message: "Authentication failed !!",
@@ -102,10 +103,155 @@ class UserController {
       };
     }
   }
-  async update(args: any) {}
-  async forgotPassword(args: any) {}
-  async resetPassword(args: any) {}
-  async updatePassword(args: any) {}
+  async update(args: any) {
+    try {
+      return await User.findByIdAndUpdate(
+        { _id: args.id },
+        {
+          $set: {
+            fname: args.fname,
+            lname: args.lname,
+            email: args.email,
+            phone: args.phone,
+          },
+        }
+      );
+    } catch (error) {
+      console.error(error);
+      return {
+        response: {
+          message: "Unable to update acount !!",
+          status: "failed",
+        },
+      };
+    }
+  }
+  async forgotPassword(args: any) {
+    try {
+      // check if the user exist
+      const user = await User.findOne({ email: args.email });
+      if (!user) {
+        return {
+          response: {
+            message: "User with this email does not exist",
+            status: "failed",
+          },
+        };
+      }
+      // generate the reset token
+      const token: string = jwt.sign(
+        {
+          userId: user._id,
+        },
+        process.env.JWT_SECRET as string,
+        {
+          expiresIn: "1h",
+        }
+      );
+      // Send Email
+      return {
+        response: {
+          token: token,
+          message: "Check your email to reset password !!",
+          status: "success",
+        },
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        response: {
+          message: "User with this email does not exist",
+          status: "failed",
+        },
+      };
+    }
+  }
+  async resetPassword(args: any) {
+    try {
+      const tokenResult: any = jwt.verify(
+        args.token,
+        process.env.JWT_SECRET as string
+      );
+      if (!tokenResult) {
+        return {
+          response: {
+            message: "Invalid or Expired reset token",
+            status: "failed",
+          },
+        };
+      }
+
+      // Hash the password
+      const hash = await bcrypt.hash(args.password, 10);
+      let result = await User.updateOne(
+        { _id: tokenResult.userId },
+        {
+          $set: {
+            password: hash,
+          },
+        }
+      );
+      if (result.acknowledged) {
+        return {
+          response: {
+            message: "Password reseted successfully !!",
+            status: "success",
+          },
+        };
+      }
+    } catch (error) {
+      console.error(error);
+      return {
+        response: {
+          message: "Operation failed, please try again !!",
+          status: "failed",
+        },
+      };
+    }
+  }
+  async updatePassword(args: any) {
+    try {
+      const tokenResult: any = jwt.verify(
+        args.token,
+        process.env.JWT_SECRET as string
+      );
+      if (!tokenResult) {
+        return {
+          response: {
+            message: "Invalid or Expired token",
+            status: "failed",
+          },
+        };
+      }
+
+      // Hash the password
+      const hash = await bcrypt.hash(args.password, 10);
+      let result = await User.updateOne(
+        { _id: tokenResult.userId },
+        {
+          $set: {
+            password: hash,
+          },
+        }
+      );
+      if (result.acknowledged) {
+        return {
+          response: {
+            message: "Password updated successfully !!",
+            status: "success",
+          },
+        };
+      }
+    } catch (error) {
+      console.error(error);
+      return {
+        response: {
+          message: "Operation failed, please try again !!",
+          status: "failed",
+        },
+      };
+    }
+  }
 }
 
 export default UserController;

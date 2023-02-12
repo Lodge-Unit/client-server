@@ -26,8 +26,8 @@ const userMutations = {
       phone: { type: new GraphQLNonNull(GraphQLString) },
       password: { type: new GraphQLNonNull(GraphQLString) },
     },
-    resolve(parent: any, args: any) {
-      return hotelUserctl.login(args);
+    async resolve(parent: any, args: any) {
+      return await hotelUserctl.login(args);
     },
   },
   updateUser: {

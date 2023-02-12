@@ -1,37 +1,38 @@
-import User from "../models/user";
+import HotelUser from "../models/hotelUser";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import _ from "lodash";
 import bcrypt from "bcryptjs";
 dotenv.config();
 
-class UserController {
+class hotelHotelUserController {
   async signUp(args: any) {
-    // Check if the user exists
-    const user = await User.find({ phone: args.phone });
-    if (user.length >= 1) {
+    // Check if the HotelUser exists
+    const hotelUser = await HotelUser.find({ phone: args.phone });
+    if (hotelUser.length >= 1) {
       return {
         response: {
-          message: "User already exists",
+          message: "HotelUser already exists",
           status: "failed",
         },
       };
     }
 
-    // Create a new user
+    // Create a new HotelUser
     try {
       const hash = await bcrypt.hash(args.password, 10);
-      const newUser = new User({
+      const newHotelUser = new HotelUser({
         fname: args.fname,
         lname: args.lname,
         email: args.email,
         phone: args.phone,
+        role: args.role,
         password: hash,
       });
-      const result = await newUser.save();
+      const result = await newHotelUser.save();
       const token: string = jwt.sign(
         {
-          userId: result._id,
+          HotelUserId: result._id,
           email: result.email,
           phone: result.phone,
         },
@@ -55,25 +56,25 @@ class UserController {
   }
   async login(args: any) {
     try {
-      const user = await User.find({ phone: args.phone });
+      const hotelUser = await HotelUser.find({ phone: args.phone });
 
-      if (user.length < 1) {
+      if (hotelUser.length < 1) {
         return {
           response: {
-            message: "User not found !!",
+            message: "HotelUser not found !!",
             status: "failed",
           },
         };
       }
 
       // Compare password
-      const result = await bcrypt.compare(args.password, user[0].password);
+      const result = await bcrypt.compare(args.password, hotelUser[0].password);
       if (result) {
         const token: string = jwt.sign(
           {
-            userId: user[0]._id,
-            email: user[0].email,
-            phone: user[0].phone,
+            HotelUserId: hotelUser[0]._id,
+            email: hotelUser[0].email,
+            phone: hotelUser[0].phone,
           },
           process.env.JWT_SECRET as string
         );
@@ -104,7 +105,7 @@ class UserController {
   }
   async update(args: any) {
     try {
-      const result = await User.updateOne(
+      const result = await HotelUser.updateOne(
         { _id: args.id },
         {
           $set: {
@@ -112,6 +113,7 @@ class UserController {
             lname: args.lname,
             email: args.email,
             phone: args.phone,
+            role: args.role,
           },
         }
       );
@@ -135,12 +137,12 @@ class UserController {
   }
   async forgotPassword(args: any) {
     try {
-      // check if the user exist
-      const user = await User.findOne({ email: args.email });
-      if (!user) {
+      // check if the HotelUser exist
+      const hotelUser = await HotelUser.findOne({ email: args.email });
+      if (!hotelUser) {
         return {
           response: {
-            message: "User with this email does not exist",
+            message: "HotelUser with this email does not exist",
             status: "failed",
           },
         };
@@ -148,7 +150,7 @@ class UserController {
       // generate the reset token
       const token: string = jwt.sign(
         {
-          userId: user._id,
+          HotelUserId: hotelUser._id,
         },
         process.env.JWT_SECRET as string,
         {
@@ -167,7 +169,7 @@ class UserController {
       console.error(error);
       return {
         response: {
-          message: "User with this email does not exist",
+          message: "HotelUser with this email does not exist",
           status: "failed",
         },
       };
@@ -190,8 +192,8 @@ class UserController {
 
       // Hash the password
       const hash = await bcrypt.hash(args.password, 10);
-      let result = await User.updateOne(
-        { _id: tokenResult.userId },
+      let result = await HotelUser.updateOne(
+        { _id: tokenResult.HotelUserId },
         {
           $set: {
             password: hash,
@@ -233,8 +235,8 @@ class UserController {
 
       // Hash the password
       const hash = await bcrypt.hash(args.password, 10);
-      let result = await User.updateOne(
-        { _id: tokenResult.userId },
+      let result = await HotelUser.updateOne(
+        { _id: tokenResult.HotelUserId },
         {
           $set: {
             password: hash,
@@ -259,10 +261,9 @@ class UserController {
       };
     }
   }
-
   async getUser(args: any) {
     try {
-      return await User.findById(args.id);
+      return await HotelUser.findById(args.id);
     } catch (error) {
       console.error(error);
       return {
@@ -275,7 +276,7 @@ class UserController {
   }
   async getUsers() {
     try {
-      return await User.find({});
+      return await HotelUser.find({});
     } catch (error) {
       console.error(error);
       return {
@@ -288,4 +289,4 @@ class UserController {
   }
 }
 
-export default UserController;
+export default hotelHotelUserController;

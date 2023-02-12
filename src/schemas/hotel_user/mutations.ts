@@ -1,9 +1,9 @@
 import { GraphQLString, GraphQLID, GraphQLNonNull } from "graphql";
 
 import UserType from "./type";
-import UserController from "../../controllers/userController";
+import HotelUserController from "../../controllers/hotelUserController";
 
-const userCtl = new UserController();
+const hotelUserctl = new HotelUserController();
 
 const userMutations = {
   signUp: {
@@ -13,10 +13,11 @@ const userMutations = {
       lname: { type: new GraphQLNonNull(GraphQLString) },
       email: { type: new GraphQLNonNull(GraphQLString) },
       phone: { type: new GraphQLNonNull(GraphQLString) },
+      role: { type: new GraphQLNonNull(GraphQLString) },
       password: { type: new GraphQLNonNull(GraphQLString) },
     },
     async resolve(parent: any, args: any) {
-      return await userCtl.signUp(args);
+      return await hotelUserctl.signUp(args);
     },
   },
   login: {
@@ -26,7 +27,7 @@ const userMutations = {
       password: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve(parent: any, args: any) {
-      return userCtl.login(args);
+      return hotelUserctl.login(args);
     },
   },
   updateUser: {
@@ -36,10 +37,11 @@ const userMutations = {
       fname: { type: new GraphQLNonNull(GraphQLString) },
       lname: { type: new GraphQLNonNull(GraphQLString) },
       email: { type: new GraphQLNonNull(GraphQLString) },
+      role: { type: new GraphQLNonNull(GraphQLString) },
       phone: { type: new GraphQLNonNull(GraphQLString) },
     },
     async resolve(parent: any, args: any) {
-      return await userCtl.update(args);
+      return await hotelUserctl.update(args);
     },
   },
   updatePassword: {
@@ -49,7 +51,7 @@ const userMutations = {
       password: { type: new GraphQLNonNull(GraphQLString) },
     },
     async resolve(parent: any, args: any) {
-      return await userCtl.updatePassword(args);
+      return await hotelUserctl.updatePassword(args);
     },
   },
   forgotPassword: {
@@ -58,7 +60,7 @@ const userMutations = {
       email: { type: new GraphQLNonNull(GraphQLString) },
     },
     async resolve(parent: any, args: any) {
-      return await userCtl.forgotPassword(args);
+      return await hotelUserctl.forgotPassword(args);
     },
   },
   resetPassword: {
@@ -68,7 +70,7 @@ const userMutations = {
       password: { type: new GraphQLNonNull(GraphQLString) },
     },
     async resolve(parent: any, args: any) {
-      return await userCtl.resetPassword(args);
+      return await hotelUserctl.resetPassword(args);
     },
   },
 };

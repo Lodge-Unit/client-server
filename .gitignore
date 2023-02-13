@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 # node modules folder
 node_modules
+<<<<<<< HEAD
 
 # producion build
 build
@@ -10,3 +11,7 @@ build
 node_modules
 >>>>>>> ed0515bfc24e147f1504d757a4098ba765f80921
 .env
+=======
+.env
+index.html
+>>>>>>> 4f66545e3139b1e592917387459d98ce96f3c3ef

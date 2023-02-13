@@ -121,23 +121,11 @@ class UserController {
       };
     }
   }
-  async update(args: any) {
+  async update(args: any, token: any) {
     try {
-      if (args.token) {
-        const tokenResult: any = jwt.verify(
-          args.token,
-          process.env.JWT_SECRET as string
-        );
-        if (!tokenResult) {
-          return {
-            response: {
-              message: "Invalid or Expired token",
-              status: "failed",
-            },
-          };
-        }
+      if (args.id) {
         const result = await User.updateOne(
-          { _id: tokenResult.userId },
+          { _id: args.id },
           {
             $set: {
               fname: args.fname,
@@ -156,8 +144,17 @@ class UserController {
           };
         }
       } else {
+        const id = getUserId(token);
+        if (!id) {
+          return {
+            response: {
+              message: "Invalid or Expired token",
+              status: "failed",
+            },
+          };
+        }
         const result = await User.updateOne(
-          { _id: args.id },
+          { _id: id },
           {
             $set: {
               fname: args.fname,
@@ -285,13 +282,10 @@ class UserController {
       };
     }
   }
-  async updatePassword(args: any) {
+  async updatePassword(args: any, token: any) {
     try {
-      const tokenResult: any = jwt.verify(
-        args.token,
-        process.env.JWT_SECRET as string
-      );
-      if (!tokenResult) {
+      const id = getUserId(token);
+      if (!id) {
         return {
           response: {
             message: "Invalid or Expired token",
@@ -300,10 +294,20 @@ class UserController {
         };
       }
 
+      // check old password
+      const user: any = await User.findById(id);
+      const _result = await bcrypt.compare(args.old_password, user.password);
+      if (!_result)
+        return {
+          response: {
+            message: "Passwords do not match !!",
+            status: "failed",
+          },
+        };
       // Hash the password
-      const hash = await bcrypt.hash(args.password, 10);
+      const hash = await bcrypt.hash(args.new_password, 10);
       let result = await User.updateOne(
-        { _id: tokenResult.userId },
+        { _id: id },
         {
           $set: {
             password: hash,
@@ -345,6 +349,14 @@ class UserController {
     } else {
       try {
         const id = getUserId(token);
+        if (!id) {
+          return {
+            response: {
+              message: "Invalid or Expired token",
+              status: "failed",
+            },
+          };
+        }
         return await User.findById(id);
       } catch (error) {
         console.error(error);

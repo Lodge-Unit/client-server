@@ -4,6 +4,7 @@ import { Response, Request, NextFunction } from "express";
 
 dotenv.config();
 export default function (req: Request, res: Response, next: NextFunction) {
+  // console.log({ req: req.headers, next: "man" });
   if (!req.headers["authorization"]) {
     return res.status(403).send("Unauthorized Request !!");
   }

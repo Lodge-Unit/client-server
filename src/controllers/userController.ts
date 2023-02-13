@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import _ from "lodash";
 import bcrypt from "bcryptjs";
 import mailer from "../services/email";
+import { getUserId } from "../utils";
 dotenv.config();
 
 class UserController {
@@ -328,7 +329,7 @@ class UserController {
     }
   }
 
-  async getUser(args: any) {
+  async getUser(args: any, token: any) {
     if (args.id) {
       try {
         return await User.findById(args.id);
@@ -343,19 +344,8 @@ class UserController {
       }
     } else {
       try {
-        const tokenResult: any = jwt.verify(
-          args.token,
-          process.env.JWT_SECRET as string
-        );
-        if (!tokenResult) {
-          return {
-            response: {
-              message: "Invalid or Expired token",
-              status: "failed",
-            },
-          };
-        }
-        return await User.findById(tokenResult.userId);
+        const id = getUserId(token);
+        return await User.findById(id);
       } catch (error) {
         console.error(error);
         return {

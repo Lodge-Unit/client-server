@@ -9,15 +9,14 @@ const userQueries = {
     type: UserType,
     args: {
       id: { type: GraphQLID },
-      token: { type: GraphQLString },
     },
-    async resolve(parent: any, args: any) {
-      return await userCtl.getUser(args);
+    async resolve(parent: any, args: any, context: any) {
+      return await userCtl.getUser(args, context.headers?.authorization);
     },
   },
   users: {
     type: new GraphQLList(UserType),
-    async resolve(parent: any, args: any) {
+    async resolve(parent: any, args: any, context: any, root: any) {
       return await userCtl.getUsers();
     },
   },

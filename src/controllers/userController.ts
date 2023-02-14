@@ -138,7 +138,7 @@ class UserController {
         if (result.acknowledged) {
           return {
             response: {
-              message: "Account updated successfully !!",
+              message: "Profile updated successfully !!",
               status: "success",
             },
           };
@@ -167,7 +167,7 @@ class UserController {
         if (result.acknowledged) {
           return {
             response: {
-              message: "Account updated successfully !!",
+              message: "Profile updated successfully !!",
               status: "success",
             },
           };
@@ -190,7 +190,7 @@ class UserController {
       if (!user) {
         return {
           response: {
-            message: "User with this email does not exist",
+            message: "User with this email does not exist !!",
             status: "failed",
           },
         };
@@ -300,7 +300,7 @@ class UserController {
       if (!_result)
         return {
           response: {
-            message: "Passwords do not match !!",
+            message: "Invalid password !!",
             status: "failed",
           },
         };

@@ -5,8 +5,6 @@ import cors from "cors";
 import { connectDatabase } from "./config";
 import dotenv from "dotenv";
 import schema from "./schemas";
-import jwt from "jsonwebtoken";
-import auth from "./middlewares/auth";
 
 dotenv.config();
 

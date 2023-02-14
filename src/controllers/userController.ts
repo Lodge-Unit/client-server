@@ -1,7 +1,6 @@
 import User from "../models/user";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import _ from "lodash";
 import bcrypt from "bcryptjs";
 import mailer from "../services/email";
 import { getUserId } from "../utils";
@@ -10,8 +9,17 @@ dotenv.config();
 class UserController {
   async signUp(args: any) {
     // Check if the user exists
-    const user = await User.find({ phone: args.phone });
-    if (user.length >= 1) {
+    const userPhone = await User.find({ phone: args.phone });
+    const userEmail = await User.find({ email: args.email });
+    if (userPhone.length >= 1) {
+      return {
+        response: {
+          message: "User already exists",
+          status: "failed",
+        },
+      };
+    }
+    if (userEmail.length >= 1) {
       return {
         response: {
           message: "User already exists",

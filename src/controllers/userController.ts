@@ -300,7 +300,8 @@ class UserController {
       if (!_result)
         return {
           response: {
-            message: "Invalid password !!",
+            message:
+              "Incorrect password. Please check your current password !!",
             status: "failed",
           },
         };

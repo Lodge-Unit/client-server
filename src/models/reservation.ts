@@ -2,50 +2,37 @@ import mongoose from "mongoose";
 
 const reservationSchema = new mongoose.Schema(
   {
-    fname: {
-      type: String,
-      required: true,
-    },
-    lname: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
-    phone: {
-      type: String,
-      required: true,
-    },
     hotelID: {
       type: String,
       required: true,
     },
-    status: {
+    userID: {
       type: String,
       required: true,
     },
-    userId: {
-      type: String,
-      required: true,
-    },
-    checkOut: {
+    roomID: {
       type: String,
       required: true,
     },
     checkIn: {
-      type: String,
+      type: Date,
       required: true,
     },
-    roomId: {
-      type: String,
+    checkOut: {
+      type: Date,
       required: true,
     },
-    guests: {
+    status: {
       type: String,
-      required: true,
+      default: "pending",
     },
+    payment_status: {
+      type: String,
+      default: "pending",
+    },
+    guestAdults: String,
+    guestChildren: String,
+    guestInfants: String,
   },
   { timestamps: true }
 );

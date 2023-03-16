@@ -1,7 +1,6 @@
 import User from "../models/user";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import _ from "lodash";
 import bcrypt from "bcryptjs";
 import mailer from "../services/email";
 import { getUserId } from "../utils";
@@ -10,8 +9,17 @@ dotenv.config();
 class UserController {
   async signUp(args: any) {
     // Check if the user exists
-    const user = await User.find({ phone: args.phone });
-    if (user.length >= 1) {
+    const userPhone = await User.find({ phone: args.phone });
+    const userEmail = await User.find({ email: args.email });
+    if (userPhone.length >= 1) {
+      return {
+        response: {
+          message: "User already exists",
+          status: "failed",
+        },
+      };
+    }
+    if (userEmail.length >= 1) {
       return {
         response: {
           message: "User already exists",
@@ -72,6 +80,7 @@ class UserController {
       };
     }
   }
+
   async login(args: any) {
     try {
       const user = await User.find({ phone: args.phone });
@@ -121,6 +130,7 @@ class UserController {
       };
     }
   }
+
   async update(args: any, token: any) {
     try {
       if (args.id) {
@@ -138,7 +148,7 @@ class UserController {
         if (result.acknowledged) {
           return {
             response: {
-              message: "Account updated successfully !!",
+              message: "Profile updated successfully !!",
               status: "success",
             },
           };
@@ -167,7 +177,7 @@ class UserController {
         if (result.acknowledged) {
           return {
             response: {
-              message: "Account updated successfully !!",
+              message: "Profile updated successfully !!",
               status: "success",
             },
           };
@@ -183,6 +193,7 @@ class UserController {
       };
     }
   }
+
   async forgotPassword(args: any) {
     try {
       // check if the user exist
@@ -190,7 +201,7 @@ class UserController {
       if (!user) {
         return {
           response: {
-            message: "User with this email does not exist",
+            message: "User with this email does not exist !!",
             status: "failed",
           },
         };
@@ -239,6 +250,7 @@ class UserController {
       };
     }
   }
+
   async resetPassword(args: any) {
     try {
       const tokenResult: any = jwt.verify(
@@ -282,6 +294,7 @@ class UserController {
       };
     }
   }
+
   async updatePassword(args: any, token: any) {
     try {
       const id = getUserId(token);
@@ -370,6 +383,7 @@ class UserController {
       }
     }
   }
+
   async getUsers() {
     try {
       return await User.find({});

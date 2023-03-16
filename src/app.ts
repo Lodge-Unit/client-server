@@ -5,8 +5,6 @@ import cors from "cors";
 import { connectDatabase } from "./config";
 import dotenv from "dotenv";
 import schema from "./schemas";
-import jwt from "jsonwebtoken";
-import auth from "./middlewares/auth";
 
 dotenv.config();
 
@@ -35,8 +33,10 @@ app.use(
   })
 );
 
-const PORT: number | string = process.env.PORT || 5000;
+app.get("/", (req, res) => res.send("Server Connected 😄"));
+
+// const PORT: number | string = process.env.PORT;
 const server = http.createServer(app);
-server.listen(PORT, () => {
-  console.log(`Listening on port ${PORT} 🚀`);
+server.listen(process.env.PORT, () => {
+  console.log(`Listening on port ${process.env.PORT} 🚀`);
 });

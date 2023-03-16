@@ -1,15 +1,25 @@
 import User from "../models/user";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import _ from "lodash";
 import bcrypt from "bcryptjs";
+import mailer from "../services/email";
+import { getUserId } from "../utils";
 dotenv.config();
 
 class UserController {
   async signUp(args: any) {
     // Check if the user exists
-    const user = await User.find({ phone: args.phone });
-    if (user.length >= 1) {
+    const userPhone = await User.find({ phone: args.phone });
+    const userEmail = await User.find({ email: args.email });
+    if (userPhone.length >= 1) {
+      return {
+        response: {
+          message: "User already exists",
+          status: "failed",
+        },
+      };
+    }
+    if (userEmail.length >= 1) {
       return {
         response: {
           message: "User already exists",
@@ -37,13 +47,30 @@ class UserController {
         },
         process.env.JWT_SECRET as string
       );
-      return {
-        response: {
-          message: "Account created",
-          token: token,
-          status: "success",
-        },
-      };
+      const emailResult = await mailer({
+        subject: "Welcome Summit Lodge",
+        type: "email",
+        token: token,
+        to: args.email,
+        message: "Welcome to Summit Lodge",
+      });
+
+      if (emailResult) {
+        return {
+          response: {
+            message: "Account created",
+            token: token,
+            status: "success",
+          },
+        };
+      } else {
+        return {
+          response: {
+            message: "Operation failed !!",
+            status: "failed",
+          },
+        };
+      }
     } catch (error: any) {
       console.error(error);
       return {
@@ -102,41 +129,9 @@ class UserController {
       };
     }
   }
-  async update(args: any) {
+  async update(args: any, token: any) {
     try {
-      if (args.token) {
-        const tokenResult: any = jwt.verify(
-          args.token,
-          process.env.JWT_SECRET as string
-        );
-        if (!tokenResult) {
-          return {
-            response: {
-              message: "Invalid or Expired token",
-              status: "failed",
-            },
-          };
-        }
-        const result = await User.updateOne(
-          { _id: tokenResult.userId },
-          {
-            $set: {
-              fname: args.fname,
-              lname: args.lname,
-              email: args.email,
-              phone: args.phone,
-            },
-          }
-        );
-        if (result.acknowledged) {
-          return {
-            response: {
-              message: "Account updated successfully !!",
-              status: "success",
-            },
-          };
-        }
-      } else {
+      if (args.id) {
         const result = await User.updateOne(
           { _id: args.id },
           {
@@ -151,7 +146,36 @@ class UserController {
         if (result.acknowledged) {
           return {
             response: {
-              message: "Account updated successfully !!",
+              message: "Profile updated successfully !!",
+              status: "success",
+            },
+          };
+        }
+      } else {
+        const id = getUserId(token);
+        if (!id) {
+          return {
+            response: {
+              message: "Invalid or Expired token",
+              status: "failed",
+            },
+          };
+        }
+        const result = await User.updateOne(
+          { _id: id },
+          {
+            $set: {
+              fname: args.fname,
+              lname: args.lname,
+              email: args.email,
+              phone: args.phone,
+            },
+          }
+        );
+        if (result.acknowledged) {
+          return {
+            response: {
+              message: "Profile updated successfully !!",
               status: "success",
             },
           };
@@ -174,7 +198,7 @@ class UserController {
       if (!user) {
         return {
           response: {
-            message: "User with this email does not exist",
+            message: "User with this email does not exist !!",
             status: "failed",
           },
         };
@@ -190,18 +214,34 @@ class UserController {
         }
       );
       // Send Email
-      return {
-        response: {
-          token: token,
-          message: "Check your email to reset password !!",
-          status: "success",
-        },
-      };
+      const result = await mailer({
+        subject: "Reset password",
+        type: "reset_password",
+        token: token,
+        to: args.email,
+      });
+
+      if (result) {
+        return {
+          response: {
+            token: token,
+            message: "Check your email to reset password !!",
+            status: "success",
+          },
+        };
+      } else {
+        return {
+          response: {
+            message: "Operation failed !!",
+            status: "failed",
+          },
+        };
+      }
     } catch (error) {
       console.error(error);
       return {
         response: {
-          message: "User with this email does not exist",
+          message: "Operation failed !!",
           status: "failed",
         },
       };
@@ -250,13 +290,10 @@ class UserController {
       };
     }
   }
-  async updatePassword(args: any) {
+  async updatePassword(args: any, token: any) {
     try {
-      const tokenResult: any = jwt.verify(
-        args.token,
-        process.env.JWT_SECRET as string
-      );
-      if (!tokenResult) {
+      const id = getUserId(token);
+      if (!id) {
         return {
           response: {
             message: "Invalid or Expired token",
@@ -265,10 +302,21 @@ class UserController {
         };
       }
 
+      // check old password
+      const user: any = await User.findById(id);
+      const _result = await bcrypt.compare(args.old_password, user.password);
+      if (!_result)
+        return {
+          response: {
+            message:
+              "Incorrect password. Please check your current password !!",
+            status: "failed",
+          },
+        };
       // Hash the password
-      const hash = await bcrypt.hash(args.password, 10);
+      const hash = await bcrypt.hash(args.new_password, 10);
       let result = await User.updateOne(
-        { _id: tokenResult.userId },
+        { _id: id },
         {
           $set: {
             password: hash,
@@ -294,7 +342,7 @@ class UserController {
     }
   }
 
-  async getUser(args: any) {
+  async getUser(args: any, token: any) {
     if (args.id) {
       try {
         return await User.findById(args.id);
@@ -309,11 +357,8 @@ class UserController {
       }
     } else {
       try {
-        const tokenResult: any = jwt.verify(
-          args.token,
-          process.env.JWT_SECRET as string
-        );
-        if (!tokenResult) {
+        const id = getUserId(token);
+        if (!id) {
           return {
             response: {
               message: "Invalid or Expired token",
@@ -321,7 +366,7 @@ class UserController {
             },
           };
         }
-        return await User.findById(tokenResult.userId);
+        return await User.findById(id);
       } catch (error) {
         console.error(error);
         return {

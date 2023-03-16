@@ -1,33 +1,34 @@
 import mongoose from "mongoose";
 
-const hotelUserSchema = new mongoose.Schema(
+const roomSchema = new mongoose.Schema(
   {
-    fname: {
+    name: {
       type: String,
       required: true,
     },
-    lname: {
+    hotelID: {
       type: String,
       required: true,
     },
-    email: {
+    category: {
       type: String,
       required: true,
     },
-    phone: {
+    price: {
       type: String,
       required: true,
     },
-    password: {
+    maximum_capacity: {
       type: String,
       required: true,
     },
-    role: {
+    facilities: {
       type: String,
       required: true,
     },
+    images: [],
   },
   { timestamps: true }
 );
 
-export default mongoose.model("User", hotelUserSchema);
+export default mongoose.model("Room", roomSchema);

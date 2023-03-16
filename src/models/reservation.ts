@@ -1,32 +1,12 @@
 import mongoose from "mongoose";
 
-const houseSchema = new mongoose.Schema(
+const reservationSchema = new mongoose.Schema(
   {
-    name: {
+    fname: {
       type: String,
       required: true,
     },
-    summary: {
-      type: String,
-      required: true,
-    },
-    state: {
-      type: String,
-      required: true,
-    },
-    city: {
-      type: String,
-      required: true,
-    },
-    category: {
-      type: String,
-      required: true,
-    },
-    address: {
-      type: String,
-      required: true,
-    },
-    phone: {
+    lname: {
       type: String,
       required: true,
     },
@@ -34,29 +14,40 @@ const houseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    location: {
-      long: String,
-      lat: String,
-    },
-    pool: {
-      type: Boolean,
-      required: true,
-    },
-    wifi: {
-      type: Boolean,
-      required: true,
-    },
-    parking_space: {
-      type: Boolean,
-      required: true,
-    },
-    rating: {
+    phone: {
       type: String,
       required: true,
     },
-    images: [],
+    hotelID: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: String,
+      required: true,
+    },
+    userId: {
+      type: String,
+      required: true,
+    },
+    checkOut: {
+      type: String,
+      required: true,
+    },
+    checkIn: {
+      type: String,
+      required: true,
+    },
+    roomId: {
+      type: String,
+      required: true,
+    },
+    guests: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
 
-export default mongoose.model("House", houseSchema);
+export default mongoose.model("Reservation", reservationSchema);

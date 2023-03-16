@@ -33,24 +33,23 @@ const userMutations = {
     type: UserType,
     args: {
       id: { type: GraphQLID },
-      token: { type: GraphQLString },
       fname: { type: new GraphQLNonNull(GraphQLString) },
       lname: { type: new GraphQLNonNull(GraphQLString) },
       email: { type: new GraphQLNonNull(GraphQLString) },
       phone: { type: new GraphQLNonNull(GraphQLString) },
     },
-    async resolve(parent: any, args: any) {
-      return await userCtl.update(args);
+    async resolve(parent: any, args: any, context: any) {
+      return await userCtl.update(args, context.headers?.authorization);
     },
   },
   updatePassword: {
     type: UserType,
     args: {
-      token: { type: new GraphQLNonNull(GraphQLString) },
-      password: { type: new GraphQLNonNull(GraphQLString) },
+      old_password: { type: new GraphQLNonNull(GraphQLString) },
+      new_password: { type: new GraphQLNonNull(GraphQLString) },
     },
-    async resolve(parent: any, args: any) {
-      return await userCtl.updatePassword(args);
+    async resolve(parent: any, args: any, context: any) {
+      return await userCtl.updatePassword(args, context.headers?.authorization);
     },
   },
   forgotPassword: {

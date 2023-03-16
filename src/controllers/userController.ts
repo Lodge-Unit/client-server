@@ -80,6 +80,7 @@ class UserController {
       };
     }
   }
+
   async login(args: any) {
     try {
       const user = await User.find({ phone: args.phone });
@@ -129,6 +130,7 @@ class UserController {
       };
     }
   }
+
   async update(args: any, token: any) {
     try {
       if (args.id) {
@@ -191,6 +193,7 @@ class UserController {
       };
     }
   }
+
   async forgotPassword(args: any) {
     try {
       // check if the user exist
@@ -247,6 +250,7 @@ class UserController {
       };
     }
   }
+
   async resetPassword(args: any) {
     try {
       const tokenResult: any = jwt.verify(
@@ -290,6 +294,7 @@ class UserController {
       };
     }
   }
+
   async updatePassword(args: any, token: any) {
     try {
       const id = getUserId(token);
@@ -378,6 +383,7 @@ class UserController {
       }
     }
   }
+
   async getUsers() {
     try {
       return await User.find({});

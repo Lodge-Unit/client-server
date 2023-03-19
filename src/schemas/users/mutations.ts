@@ -71,6 +71,16 @@ const userMutations = {
       return await userCtl.resetPassword(args);
     },
   },
+  updateUserStatus: {
+    type: UserType,
+    args: {
+      id: { type: new GraphQLNonNull(GraphQLString) },
+      status: { type: new GraphQLNonNull(GraphQLString) },
+    },
+    async resolve(parent: any, args: any) {
+      return await userCtl.updateUserStatus(args);
+    },
+  },
 };
 
 export default userMutations;

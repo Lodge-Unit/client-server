@@ -397,6 +397,37 @@ class UserController {
       };
     }
   }
+
+  async updateUserStatus(args: any) {
+    try {
+      if (args.id) {
+        const result = await User.updateOne(
+          { _id: args.id },
+          {
+            $set: {
+              status: args.status,
+            },
+          }
+        );
+        if (result.acknowledged) {
+          return {
+            response: {
+              message: "Status Updated !!",
+              status: "success",
+            },
+          };
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      return {
+        response: {
+          message: "Update Failed !!",
+          status: "failed",
+        },
+      };
+    }
+  }
 }
 
 export default UserController;

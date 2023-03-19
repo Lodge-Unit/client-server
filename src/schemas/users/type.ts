@@ -9,7 +9,7 @@ import {
 } from "graphql";
 
 import User from "../../models/user";
-import { ResponseType } from "../types";
+import { ResponseType, DateScalarType } from "../types";
 
 const UserType: GraphQLObjectType = new GraphQLObjectType({
   name: "User",
@@ -19,8 +19,10 @@ const UserType: GraphQLObjectType = new GraphQLObjectType({
     lname: { type: GraphQLString },
     email: { type: GraphQLString },
     phone: { type: GraphQLString },
+    status: { type: GraphQLString },
     password: { type: GraphQLString },
     response: { type: ResponseType },
+    createdAt: { type: DateScalarType },
   }),
 });
 

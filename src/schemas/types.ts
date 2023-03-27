@@ -1,4 +1,9 @@
-import { GraphQLObjectType, GraphQLString, GraphQLScalarType } from "graphql";
+import {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLScalarType,
+  GraphQLInputObjectType,
+} from "graphql";
 
 export const ResponseType: GraphQLObjectType = new GraphQLObjectType({
   name: "ResponseType",
@@ -11,10 +16,10 @@ export const ResponseType: GraphQLObjectType = new GraphQLObjectType({
 
 export const DateScalarType = new GraphQLScalarType({
   name: "Date",
-  parseValue(value) {
+  parseValue(value: any) {
     return new Date(value);
   },
-  serialize(value) {
+  serialize(value: any) {
     return value.toISOString();
   },
 });

@@ -7,6 +7,7 @@ import {
   GraphQLInt,
   GraphQLNonNull,
 } from "graphql";
+import { GraphQLUpload } from "graphql-upload-minimal";
 
 import User from "../../models/user";
 import { ResponseType, DateScalarType } from "../types";
@@ -15,6 +16,7 @@ const UserType: GraphQLObjectType = new GraphQLObjectType({
   name: "User",
   fields: () => ({
     id: { type: GraphQLID },
+    profilePic: { type: GraphQLUpload },
     fname: { type: GraphQLString },
     lname: { type: GraphQLString },
     email: { type: GraphQLString },

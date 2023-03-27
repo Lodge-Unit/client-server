@@ -5,9 +5,9 @@ import cors from "cors";
 import { connectDatabase } from "./config";
 import dotenv from "dotenv";
 import schema from "./schemas";
+import { graphqlUploadExpress } from "graphql-upload-minimal";
 
 dotenv.config();
-
 const app: Express = express();
 
 // Connect Database
@@ -27,6 +27,7 @@ app.use(
 
 app.use(
   `/api/${process.env.API_VERSION}`,
+  graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
   graphqlHTTP({
     schema,
     graphiql: true,

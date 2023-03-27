@@ -1,4 +1,5 @@
 import { GraphQLString, GraphQLID, GraphQLNonNull } from "graphql";
+import { GraphQLUpload } from "graphql-upload-minimal";
 
 import UserType from "./type";
 import UserController from "../../controllers/userController";
@@ -39,7 +40,23 @@ const userMutations = {
       phone: { type: new GraphQLNonNull(GraphQLString) },
     },
     async resolve(parent: any, args: any, context: any) {
+      console.log(args);
       return await userCtl.update(args, context.headers?.authorization);
+    },
+  },
+  updateProfilePic: {
+    type: UserType,
+    args: {
+      id: { type: GraphQLID },
+      file: { type: GraphQLUpload },
+    },
+    async resolve(parent: any, args: any, context: any) {
+      const { filename, mimetype, createReadStream } = await args.file;
+      const stream = createReadStream();
+      return await userCtl.updateProfilePic(
+        args,
+        context.headers?.authorization
+      );
     },
   },
   updatePassword: {

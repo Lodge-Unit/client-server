@@ -138,6 +138,7 @@ class UserController {
           { _id: args.id },
           {
             $set: {
+              profilePic: args.profilePic,
               fname: args.fname,
               lname: args.lname,
               email: args.email,
@@ -167,10 +168,69 @@ class UserController {
           { _id: id },
           {
             $set: {
+              profilePic: args.profilePic,
               fname: args.fname,
               lname: args.lname,
               email: args.email,
               phone: args.phone,
+            },
+          }
+        );
+        if (result.acknowledged) {
+          return {
+            response: {
+              message: "Profile updated successfully !!",
+              status: "success",
+            },
+          };
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      return {
+        response: {
+          message: "Unable to update acount !!",
+          status: "failed",
+        },
+      };
+    }
+  }
+
+  async updateProfilePic(args: any, token: any) {
+    try {
+      const { filename, mimetype, createReadStream } = await args.file;
+      if (args.id) {
+        const result = await User.updateOne(
+          { _id: args.id },
+          {
+            $set: {
+              profilePic: filename,
+            },
+          }
+        );
+        if (result.acknowledged) {
+          return {
+            response: {
+              message: "Profile updated successfully !!",
+              status: "success",
+            },
+          };
+        }
+      } else {
+        const id = getUserId(token);
+        if (!id) {
+          return {
+            response: {
+              message: "Invalid or Expired token",
+              status: "failed",
+            },
+          };
+        }
+        const result = await User.updateOne(
+          { _id: id },
+          {
+            $set: {
+              profilePic: filename,
             },
           }
         );

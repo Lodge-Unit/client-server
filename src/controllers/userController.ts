@@ -2,9 +2,12 @@ import User from "../models/user";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
+// import multer, { memoryStorage } from "multer";
 import mailer from "../services/email";
 import { getUserId } from "../utils";
 dotenv.config();
+
+import { uploadToS3, getPresignedUrls } from "../s3/s3";
 
 class UserController {
   async signUp(args: any) {
@@ -208,11 +211,22 @@ class UserController {
             },
           }
         );
+        // pushing file to s3
+        const { error, key } = await uploadToS3(args.file, args.id);
+        if (error) {
+          return {
+            response: {
+              message: error,
+            },
+          };
+        }
+        // end of s3 function
         if (result.acknowledged) {
           return {
             response: {
               message: "Profile updated successfully !!",
               status: "success",
+              key: key,
             },
           };
         }
@@ -226,6 +240,16 @@ class UserController {
             },
           };
         }
+        // pushing file to s3
+        const { error, key } = await uploadToS3(args.file, id);
+        if (error) {
+          return {
+            response: {
+              message: error,
+            },
+          };
+        }
+        // end of s3 function
         const result = await User.updateOne(
           { _id: id },
           {
@@ -239,6 +263,7 @@ class UserController {
             response: {
               message: "Profile updated successfully !!",
               status: "success",
+              key: key,
             },
           };
         }
@@ -247,7 +272,7 @@ class UserController {
       console.error(error);
       return {
         response: {
-          message: "Unable to update acount !!",
+          message: "Unable to update image !!",
           status: "failed",
         },
       };
@@ -431,7 +456,11 @@ class UserController {
             },
           };
         }
-        return await User.findById(id);
+        // get images from s3
+        const images = await getPresignedUrls(id);
+        console.log(images);
+        // get images from s3
+        return User.findById(id);
       } catch (error) {
         console.error(error);
         return {

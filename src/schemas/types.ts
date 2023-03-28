@@ -11,6 +11,7 @@ export const ResponseType: GraphQLObjectType = new GraphQLObjectType({
     token: { type: GraphQLString },
     message: { type: GraphQLString },
     status: { type: GraphQLString },
+    key: { type: GraphQLString },
   }),
 });
 

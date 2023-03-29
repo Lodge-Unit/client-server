@@ -51,8 +51,7 @@ const userMutations = {
       file: { type: GraphQLUpload },
     },
     async resolve(parent: any, args: any, context: any) {
-      // const { filename, mimetype, createReadStream } = await args.file;
-      // const stream = createReadStream();
+      const { filename, mimetype, createReadStream } = await args.file;
       return await userCtl.updateProfilePic(
         args,
         context.headers?.authorization

@@ -27,7 +27,10 @@ app.use(
 
 app.use(
   `/api/${process.env.API_VERSION}`,
-  graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
+  graphqlUploadExpress({
+    maxFileSize: 10000000,
+    maxFiles: 10,
+  }),
   graphqlHTTP({
     schema,
     graphiql: true,

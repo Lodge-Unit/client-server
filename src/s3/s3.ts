@@ -12,14 +12,26 @@ dotenv.config();
 const s3 = new S3Client({});
 const BUCKET = process.env.AWS_BUCKET;
 
+// converting image to binary data(Buffer)
+const streamToString = (stream: any) => {
+  return new Promise((resolve, reject) => {
+    stream.on("data", (chunk: any) => resolve(Buffer.from(chunk)));
+    stream.on("error", (err: any) => reject(err));
+    // stream.on("end", () => resolve(chunk));
+  });
+};
+
+// uploading image to s3 bucket
 export const uploadToS3 = async (file: any, userId: any) => {
-  const { filename, mimetype } = await file;
+  const { filename, mimetype, createReadStream } = await file;
+  const image: any = await streamToString(createReadStream());
+
   const randomID = uuid();
   const key = `${userId}/${randomID}`;
   const command = new PutObjectCommand({
     Bucket: BUCKET,
     Key: key,
-    Body: filename,
+    Body: image,
     ContentType: mimetype,
   });
 
@@ -32,6 +44,7 @@ export const uploadToS3 = async (file: any, userId: any) => {
   }
 };
 
+// getting image keys for a st of images
 const getImageKeysByGroup = async (groupId: any) => {
   const command = new ListObjectsV2Command({
     Bucket: BUCKET,
@@ -39,9 +52,10 @@ const getImageKeysByGroup = async (groupId: any) => {
   });
   const { Contents = [] } = await s3.send(command);
 
-  return Contents.map((image) => image.Key);
+  return Contents.sort().map((image) => image.Key);
 };
 
+// getting urls of all images in a set of images
 export const getPresignedUrls = async (groupId: any) => {
   try {
     const imageKeys = await getImageKeysByGroup(groupId);

@@ -3,6 +3,7 @@ import {
   ListObjectsV2Command,
   PutObjectCommand,
   GetObjectCommand,
+  DeleteObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -44,7 +45,7 @@ export const uploadToS3 = async (file: any, userId: any) => {
   }
 };
 
-// getting image keys for a st of images
+// getting array of image keys for a st of images
 const getImageKeysByGroup = async (groupId: any) => {
   const command = new ListObjectsV2Command({
     Bucket: BUCKET,
@@ -73,4 +74,16 @@ export const getPresignedUrls = async (groupId: any) => {
     console.error(error);
     return { error };
   }
+};
+
+// function to delete an image from s3 bucket
+export const deleteObject = async (imageId: any) => {
+  const input = {
+    Bucket: BUCKET,
+    Key: imageId,
+  };
+
+  const command = new DeleteObjectCommand(input);
+  const response = await s3.send(command);
+  return response;
 };

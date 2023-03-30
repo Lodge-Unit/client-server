@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    awsProfileImageKey: {
+      type: String,
+      default: "",
+    },
     fname: {
       type: String,
       required: true,

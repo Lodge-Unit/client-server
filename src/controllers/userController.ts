@@ -7,7 +7,7 @@ import mailer from "../services/email";
 import { getUserId } from "../utils";
 dotenv.config();
 
-import { uploadToS3, getPresignedUrls } from "../s3/s3";
+import { uploadToS3, getPresignedUrls, deleteObject } from "../s3/s3";
 
 class UserController {
   async signUp(args: any) {
@@ -240,6 +240,13 @@ class UserController {
             },
           };
         }
+        // deleting file from s3
+        const singleUser = await User.findById(id);
+        if (singleUser?.awsProfileImageKey != "") {
+          await deleteObject(singleUser?.awsProfileImageKey);
+        }
+        // end
+
         // pushing file to s3
         const { error, key } = await uploadToS3(args.file, id);
         if (error) {
@@ -249,12 +256,19 @@ class UserController {
             },
           };
         }
-        // end of s3 function
+        // end
+
+        // get images from s3
+        const images: any = await getPresignedUrls(id);
+        const profileUrl: Array<String> = images.presignedUrls;
+        // end
+
         const result = await User.updateOne(
           { _id: id },
           {
             $set: {
-              profilePic: filename,
+              profilePic: profileUrl[0],
+              awsProfileImageKey: key,
             },
           }
         );
@@ -456,10 +470,6 @@ class UserController {
             },
           };
         }
-        // get images from s3
-        const images = await getPresignedUrls(id);
-        console.log(images);
-        // get images from s3
         return User.findById(id);
       } catch (error) {
         console.error(error);

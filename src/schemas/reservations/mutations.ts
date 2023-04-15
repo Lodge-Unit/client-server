@@ -1,4 +1,4 @@
-import { GraphQLString, GraphQLID, GraphQLNonNull } from "graphql";
+import { GraphQLString, GraphQLID, GraphQLNonNull, GraphQLInt } from "graphql";
 
 import ReservationType from "./type";
 import { DateScalarType } from "../types";
@@ -11,12 +11,14 @@ const reservationMutations = {
     type: ReservationType,
     args: {
       hotelID: { type: new GraphQLNonNull(GraphQLString) },
-      userID: { type: new GraphQLNonNull(GraphQLString) },
       roomID: { type: new GraphQLNonNull(GraphQLString) },
       checkIn: { type: new GraphQLNonNull(DateScalarType) },
       checkOut: { type: new GraphQLNonNull(DateScalarType) },
+      numberOfDays: { type: new GraphQLNonNull(GraphQLInt) },
+      ammountPaid: { type: new GraphQLNonNull(GraphQLInt) },
+      paymentMethod: { type: new GraphQLNonNull(GraphQLString) },
       guestAdults: { type: new GraphQLNonNull(GraphQLString) },
-      guestChildren: { type: new GraphQLNonNull(GraphQLString) },
+      guestChildrens: { type: new GraphQLNonNull(GraphQLString) },
       guestInfants: { type: new GraphQLNonNull(GraphQLString) },
     },
     async resolve(parent: any, args: any, context: any) {

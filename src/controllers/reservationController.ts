@@ -24,8 +24,11 @@ class ReservationController {
         roomID: args.roomID,
         checkIn: args.checkIn,
         checkOut: args.checkOut,
+        numberOfDays: args.numberOfDays,
+        amountPaid: args.amountPaid,
+        paymentMethod: args.paymentMethod,
         guestAdults: args.guestAdults,
-        guestChildren: args.guestChildren,
+        guestChildrens: args.guestChildrens,
         guestInfants: args.guestInfants,
       });
       const result = await newReservation.save();

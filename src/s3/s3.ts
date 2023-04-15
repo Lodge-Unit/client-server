@@ -10,7 +10,13 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { uuid } from "uuidv4";
 dotenv.config();
 
-const s3 = new S3Client({});
+const s3 = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+  },
+});
 const BUCKET = process.env.AWS_BUCKET;
 
 // converting image to binary data(Buffer)

@@ -22,6 +22,18 @@ const reservationSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    numberOfDays: {
+      type: Number,
+      required: true,
+    },
+    amountPaid: {
+      type: Number,
+      required: true,
+    },
+    paymentMethod: {
+      type: String,
+      required: true,
+    },
     status: {
       type: String,
       default: "pending",

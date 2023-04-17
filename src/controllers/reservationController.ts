@@ -37,7 +37,7 @@ class ReservationController {
           response: {
             message: "Reservation successfully",
             status: "success",
-            reservation: result,
+            reservationID: result._id,
           },
         };
       } else {

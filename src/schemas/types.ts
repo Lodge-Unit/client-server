@@ -3,6 +3,7 @@ import {
   GraphQLString,
   GraphQLScalarType,
   GraphQLInputObjectType,
+  GraphQLID,
 } from "graphql";
 
 export const ResponseType: GraphQLObjectType = new GraphQLObjectType({
@@ -12,6 +13,7 @@ export const ResponseType: GraphQLObjectType = new GraphQLObjectType({
     message: { type: GraphQLString },
     status: { type: GraphQLString },
     key: { type: GraphQLString },
+    reservationID: { type: GraphQLID }
   }),
 });
 

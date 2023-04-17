@@ -23,7 +23,7 @@ const reservationSchema = new mongoose.Schema(
       required: true,
     },
     numberOfDays: {
-      type: Number,
+      type: String,
       required: true,
     },
     amountPaid: {

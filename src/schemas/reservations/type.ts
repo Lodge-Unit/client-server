@@ -14,13 +14,17 @@ import { ResponseType, DateScalarType } from "../types";
 const ReservationType: GraphQLObjectType = new GraphQLObjectType({
   name: "Reservation",
   fields: () => ({
-    id: { type: GraphQLID },
+    id: { type: GraphQLString },
     hotelID: { type: GraphQLString },
     userID: { type: GraphQLString },
     roomID: { type: GraphQLString },
     checkIn: { type: DateScalarType },
     checkOut: { type: DateScalarType },
+    numberOfDays: { type: GraphQLString },
+    amountPaid:{type: GraphQLInt},
+    paymentMethod:{type: GraphQLString},
     status: { type: GraphQLString },
+    payment_status: { type: GraphQLString },
     guestAdults: { type: GraphQLString },
     guestChildren: { type: GraphQLString },
     guestInfants: { type: GraphQLString },

@@ -13,7 +13,7 @@ export const ResponseType: GraphQLObjectType = new GraphQLObjectType({
     message: { type: GraphQLString },
     status: { type: GraphQLString },
     key: { type: GraphQLString },
-    reservationID: { type: GraphQLID }
+    reservationID: { type: GraphQLID },
   }),
 });
 
@@ -25,4 +25,12 @@ export const DateScalarType = new GraphQLScalarType({
   serialize(value: any) {
     return value.toISOString();
   },
+});
+
+export const FacilitiesType: GraphQLObjectType = new GraphQLObjectType({
+  name: "Facilities",
+  fields: () => ({
+    icon: { type: GraphQLString },
+    text: { type: GraphQLString },
+  }),
 });

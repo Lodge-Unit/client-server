@@ -1,4 +1,5 @@
 import Reservation from "../models/reservation";
+import Room from "../models/room";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
@@ -32,7 +33,15 @@ class ReservationController {
         guestInfants: args.guestInfants,
       });
       const result = await newReservation.save();
-      if (result) {
+      const roomUpdate = await Room.updateOne(
+        { _id: result.roomID },
+        {
+          $set: {
+            reservationID: result._id,
+          },
+        }
+      );
+      if (result && roomUpdate.acknowledged) {
         return {
           response: {
             message: "Reservation successfully",
@@ -61,6 +70,33 @@ class ReservationController {
   async getReservations() {
     try {
       return await Reservation.find({});
+    } catch (error) {
+      console.error(error);
+      return {
+        response: {
+          message: "Operation failed !!",
+          status: "failed",
+        },
+      };
+    }
+  }
+
+  async getUserReservations(token: any) {
+    try {
+      const id = getUserId(token);
+      if (!id) {
+        return {
+          response: {
+            message: "Invalid or Expired token",
+            status: "failed",
+          },
+        };
+      }
+      const reservations = await Reservation.find({ userID: id });
+      const rooms: any = reservations.map(async (reservation) => {
+        return await Room.findById(reservation.roomID);
+      });
+      return rooms;
     } catch (error) {
       console.error(error);
       return {

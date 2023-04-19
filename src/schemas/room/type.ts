@@ -1,0 +1,41 @@
+import {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLSchema,
+  GraphQLID,
+  GraphQLList,
+  GraphQLInt,
+  GraphQLBoolean,
+  GraphQLNonNull,
+  GraphQLInputObjectType,
+} from "graphql";
+import { ResponseType, FacilitiesType, DateScalarType } from "../types";
+
+export const RoomType: GraphQLObjectType = new GraphQLObjectType({
+  name: "Room",
+  fields: () => ({
+    id: { type: GraphQLID },
+    hotelID: { type: GraphQLID },
+    reservationID: { type: GraphQLString },
+    name: { type: GraphQLString },
+    category: { type: GraphQLString },
+    price_per_night: { type: GraphQLString },
+    maximum_capacity: { type: GraphQLString },
+    facilities: { type: new GraphQLList(FacilitiesType) },
+    images: { type: new GraphQLList(GraphQLString) },
+    number_of_beds: { type: GraphQLString },
+    number_of_baths: { type: GraphQLString },
+    number_of_bedrooms: { type: GraphQLInt },
+    stay_information: { type: GraphQLString },
+    response: { type: ResponseType },
+    status: { type: GraphQLString },
+    commentCount: { type: GraphQLInt },
+    viewCount: { type: GraphQLInt },
+    reviewStart: { type: GraphQLInt },
+    reviewCount: { type: GraphQLInt },
+    like: { type: GraphQLBoolean },
+    saleOff: { type: GraphQLString },
+    isAds: { type: GraphQLBoolean },
+    createdAt: { type: DateScalarType },
+  }),
+});

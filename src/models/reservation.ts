@@ -43,7 +43,7 @@ const reservationSchema = new mongoose.Schema(
       default: "pending",
     },
     guestAdults: String,
-    guestChildren: String,
+    guestChildrens: String,
     guestInfants: String,
   },
   { timestamps: true }
